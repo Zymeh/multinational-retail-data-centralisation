@@ -13,12 +13,8 @@ class DataExtractor:
 
         return inspector.get_table_names()
 
-    def read_rds_table(self):
+    def read_rds_table(self, table):
         import pandas as pd
-        list_of_table_names = self.list_db_tables()
-        dataframes = {}
 
-        for table in list_of_table_names:
-            df = pd.read_sql_table(table, self.engine)
-            dataframes.update({table: df})
-        return dataframes
+        df = pd.read_sql_table(table, self.engine)
+        return df
