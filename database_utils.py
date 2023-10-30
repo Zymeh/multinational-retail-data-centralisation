@@ -50,4 +50,4 @@ class DatabaseConnector:
 
 
 
-DatabaseConnector('db_creds.yaml').read_db_creds()
+
