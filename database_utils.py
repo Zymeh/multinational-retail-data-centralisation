@@ -10,7 +10,6 @@ class DatabaseConnector:
         import os
         import yaml
 
-
         try:
             if not self.file.endswith('.yaml') and not self.file.endswith('.yml'):
                 raise self.NotYAMLFileError("File is not a YAML file.")
@@ -35,7 +34,7 @@ class DatabaseConnector:
     def init_db_engine(self):
         from sqlalchemy import create_engine
 
-        credentials = read_db_creds()
+        credentials = self.read_db_creds()
 
         DATABASE_TYPE = 'postgresql'
         DBAPI = 'psycopg2'
@@ -46,6 +45,8 @@ class DatabaseConnector:
         PORT = credentials["RDS_PORT"] 
 
         engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}", future=True)
+
+        return engine
 
 
 
