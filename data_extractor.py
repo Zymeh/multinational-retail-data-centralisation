@@ -2,6 +2,7 @@ from database_utils import DatabaseConnector
 import tabula
 import validators
 import pandas as pd
+import requests
 class DataExtractor:
 
     def __init__(self):
@@ -38,4 +39,14 @@ class DataExtractor:
         df = pd.concat(pdf_data, ignore_index=True)
 
         return df
-    
+
+    def list_number_of_stores(self):
+
+        url = " https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores"
+        headers = {
+            "Content-Type": "application/json",
+            "x-api-key": "yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX"
+        }
+        response = requests.get(url, headers=headers).json()
+        number_of_stores = response['number_stores']
+    return number_of_stores
