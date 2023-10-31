@@ -96,3 +96,20 @@ class DataCleaning:
         store_data = store_data.reset_index(drop=True)
 
         return store_data
+    
+    def clean_orders_data(self):
+
+        orders_data = self.de.read_rds_table('orders_table')
+
+        orders_data = orders_data.drop('level_0', axis=1)
+        orders_data = orders_data.drop('first_name', axis=1)
+        orders_data = orders_data.drop('last_name', axis=1)
+        orders_data = orders_data.drop('1', axis=1)
+        
+        orders_data['card_number'] = orders_data['card_number'].astype('string')
+        orders_data['store_code'] = orders_data['store_code'].astype('string')
+        orders_data['product_code'] = orders_data['product_code'].astype('string')
+        orders_data['user_uuid'] = orders_data['user_uuid'].astype('string')
+        orders_data['date_uuid'] = orders_data['date_uuid'].astype('string')
+
+        return orders_data
