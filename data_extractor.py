@@ -10,6 +10,10 @@ class DataExtractor:
         self.file = 'db_creds.yaml'
         self.rds_db_con = DatabaseConnector(self.file)
         self.engine = self.rds_db_con.init_db_engine()
+        self.headers_stores = {
+            "Content-Type": "application/json",
+            "x-api-key": "yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX"
+        }
 
     def list_db_tables(self): #lists tables
         from sqlalchemy import MetaData, inspect
@@ -43,10 +47,27 @@ class DataExtractor:
     def list_number_of_stores(self):
 
         url = " https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores"
-        headers = {
-            "Content-Type": "application/json",
-            "x-api-key": "yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX"
-        }
-        response = requests.get(url, headers=headers).json()
+        response = requests.get(url, headers=self.headers_stores).json()
         number_of_stores = response['number_stores']
-    return number_of_stores
+
+        return number_of_stores
+
+    def retrieve_stores_data(self):
+
+        number_of_stores = DataExtractor().list_number_of_stores()
+
+        store_data = pd.DataFrame()
+
+        for store_number in range(number_of_stores):
+
+            url = f'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}'
+
+            response = requests.get(url, headers=self.headers_stores).json()
+
+            df_for_store = pd.DataFrame([response])
+            store_data = pd.concat([store_data, df_for_store], ignore_index=True)
+        
+        store_data = store_data.set_index('index')
+
+        return store_data
+
