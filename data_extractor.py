@@ -3,6 +3,7 @@ import tabula
 import validators
 import pandas as pd
 import requests
+import boto3
 class DataExtractor:
 
     def __init__(self):
@@ -24,7 +25,6 @@ class DataExtractor:
 
     def read_rds_table(self, table): #sql table to pandas dataframe
         
-
         df = pd.read_sql_table(table, self.engine)
         return df
     
@@ -71,3 +71,11 @@ class DataExtractor:
 
         return store_data
 
+    def extract_from_s3(self):
+
+        s3 = boto3.client('s3')
+        s3.download_file('data-handling-public', 'products.csv', 'product_details.csv')
+
+        product_details = pd.read_csv('product_details.csv')
+
+        return product_details
