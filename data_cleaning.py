@@ -7,7 +7,6 @@ class DataCleaning:
 
     def clean_user_data(self):
 
-        
         df = de.read_rds_table('legacy_users')
 
         df = df.set_index('index')
@@ -60,3 +59,40 @@ class DataCleaning:
         card_data['date_payment_confirmed'] = pd.to_datetime(card_data['date_payment_confirmed'], format='mixed')
 
         return card_data
+
+    def clean_store_data(self):
+
+        store_data = self.de.retrieve_stores_data()
+
+        condition = store_data['address'] == 'NULL'
+        store_data = store_data.drop(store_data[condition].index)
+        store_data['address'] = store_data['address'].str.replace('\n', ', ')
+        store_data['address'] = store_data['address'].astype('string')
+
+        strange_entries = ['YELVM536YT','FP8DLXQVGH','HMHIFNLOBN','F3AO8V2LHU','OH20I92LX3','OYVW925ZL8','B3EH2ZGQAV']
+        condition = store_data['country_code'].isin(strange_entries)
+        store_data = store_data.drop(store_data[condition].index)
+        store_data['country_code'] = store_data['country_code'].astype('string')
+
+        store_data['longitude'] = store_data['longitude'].astype('float32', errors='ignore')
+
+        store_data = store_data.drop('lat', axis=1)
+
+        store_data['locality'] = store_data['locality'].astype('string')
+
+        store_data['store_code'] = store_data['store_code'].astype('string')
+
+        store_data['staff_numbers'] = store_data['staff_numbers'].astype('int32', errors='ignore')
+
+        store_data['opening_date'] = pd.to_datetime(store_data['opening_date'], format='mixed', errors='ignore')
+
+        store_data['latitude'] = store_data['latitude'].astype('float32', errors='ignore')
+
+        store_data['continent'] = store_data['continent'].str.replace('ee', '')
+        store_data['continent'] = store_data['continent'].astype('string')
+
+        store_data.replace('N/A', pd.NA, inplace=True)
+
+        store_data = store_data.reset_index(drop=True)
+
+        return store_data
