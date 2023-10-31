@@ -1,4 +1,9 @@
+from sqlalchemy import create_engine
+import os
+import yaml
+
 class DatabaseConnector:
+
     def __init__(self, file_path):
         self.file = file_path
 
@@ -6,9 +11,7 @@ class DatabaseConnector:
         "definining a custom exception for when the file isnt a YAML file."
         pass
 
-    def read_db_creds(self):
-        import os
-        import yaml
+    def read_db_creds(self): #reads the creds stored in the YAML file
 
         try:
             if not self.file.endswith('.yaml') and not self.file.endswith('.yml'):
@@ -31,8 +34,7 @@ class DatabaseConnector:
         except AttributeError:
             print(f'AttributeError: please use the correct data type')
 
-    def init_db_engine(self):
-        from sqlalchemy import create_engine
+    def init_db_engine(self): #creating engine to be used when getting database from RDS
 
         credentials = self.read_db_creds()
 
@@ -44,11 +46,20 @@ class DatabaseConnector:
         DATABASE = credentials["RDS_DATABASE"]
         PORT = credentials["RDS_PORT"] 
 
-        engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}", future=True)
+        engine_for_extraction = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}", future=True)
 
-        return engine
+        return engine_for_extraction
 
+    def upload_to_db(self, cleaned_dataframe, table_name): 
+        
+        DATABASE_TYPE = 'postgresql'
+        DBAPI = 'psycopg2'
+        HOST = 'localhost'
+        USER = 'postgres'
+        PASSWORD = 'QaB94cE#'
+        DATABASE = 'sales_data'
+        PORT = 5432
+        engine_for_uploading = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}", future=True)
 
-
-
-
+        with engine_for_uploading.begin() as connection_to_sales_data:
+            cleaned_dataframe.to_sql(table_name, con=connection_to_sales_data, if_exists='replace')
