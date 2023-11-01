@@ -1,5 +1,6 @@
 import data_extractor
 import pandas as pd
+import re
 class DataCleaning:
 
     def __init__(self):
@@ -97,6 +98,55 @@ class DataCleaning:
 
         return store_data
     
+    def convert_product_weights(self, product_data):
+
+        condition = pd.isna(product_data['weight'])
+        product_data = product_data.drop(product_data[condition].index)
+
+        strange_entries = ['S1YB74MLMJ', 'C3NCA2CL35', 'WVPMHZP59U']
+        condition = product_data['category'].isin(strange_entries)
+        product_data = product_data.drop(product_data[condition].index)
+
+        for _ in product_data['weight']:
+
+            weight_to_convert = str(_)
+
+            if 'x' in weight_to_convert:
+                stripped_weight = re.findall(r'\d+', weight_to_convert)
+                adjusted_weight = (float(stripped_weight[0]) * float(stripped_weight[1])) / 1000
+
+            elif 'kg' in weight_to_convert:
+                adjusted_weight = weight_to_convert.replace('kg', '')
+
+            else:
+               stripped_weight = re.findall(r'\d+', weight_to_convert)
+               adjusted_weight = int(stripped_weight[-1]) / 1000
+
+            product_data['weight'] = product_data['weight'].replace(_ , adjusted_weight) 
+
+        return product_data   
+
+    def clean_products_data(self):
+
+        product_data = self.de.extract_from_s3()
+
+        product_data = product_data.drop('Unnamed: 0', axis=1 )
+
+        product_data = self.convert_product_weights(product_data)
+
+        product_data['date_added'] = pd.to_datetime(product_data['date_added'], format='mixed')
+
+        product_data['product_price'] = product_data['product_price'].str.replace('£', '').astype('string')
+        product_data['product_name'] = product_data['product_name'].astype('string')
+        product_data['category'] = product_data['category'].astype('string')
+        product_data['EAN'] = product_data['EAN'].astype('string')
+        product_data['uuid'] = product_data['uuid'].astype('string')
+        product_data['removed'] = product_data['removed'].astype('string')
+        product_data['product_code'] = product_data['product_code'].astype('string')
+        product_data['weight'] = product_data['weight'].astype('float')
+
+        return product_data
+
     def clean_orders_data(self):
 
         orders_data = self.de.read_rds_table('orders_table')
