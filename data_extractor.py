@@ -37,6 +37,7 @@ class DataExtractor:
                 raise ValidationError
         except ValidationError:
             print(f'The URL ({link}) you have provided is invalid, please try again.')
+            return
    
         pdf_data = tabula.read_pdf(link, pages='all',multiple_tables=True)
 
@@ -81,6 +82,7 @@ class DataExtractor:
                 raise ValidationError
         except ValidationError:
             print(f'The URL ({link}) you have provided is invalid, please try again.')
+            return
 
         link_parts = link.split('/')
 
@@ -92,6 +94,5 @@ class DataExtractor:
 
         elif '.json' in link_parts[-1]:
             product_details = pd.read_json(link_parts[-1])
-
 
         return product_details
