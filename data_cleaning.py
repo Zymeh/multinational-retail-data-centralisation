@@ -163,3 +163,26 @@ class DataCleaning:
         orders_data['date_uuid'] = orders_data['date_uuid'].astype('string')
 
         return orders_data
+    
+    def clean_date_time_data(self):
+
+        url = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'
+
+        date_time_data = self.de.extract_from_s3(url)
+        
+        strange_entries = ['1YMRDJNU2T', '9GN4VIO5A8', 'NF46JOZMTA', 'LZLLPZ0ZUA', 'YULO5U0ZAM', 'SAT4V9O2DL', '3ZZ5UCZR5D', 'DGQAH7M1HQ', '4FHLELF101', '22JSMNGJCU', 'EB8VJHYZLE', '2VZEREEIKB', 'K9ZN06ZS1X', '9P3C0WBWTU', 'W6FT760O2B', 'DOIR43VTCM', 'FA8KD82QH3', '03T414PVFI', 'FNPZFYI489', '67RMH5U2R6', 'J9VQLERJQO', 'ZRH2YT3FR8', 'GYSATSCN88']
+
+        condition = date_time_data['month'].isin(strange_entries)
+        date_time_data = date_time_data.drop(date_time_data[condition].index)
+
+        condition = date_time_data['month'] == 'NULL'
+        date_time_data = date_time_data.drop(date_time_data[condition].index)
+
+        date_time_data['time_period'] = date_time_data['time_period'].astype('string')
+        date_time_data['day'] = date_time_data['day'].astype('int')
+        date_time_data['year'] = date_time_data['year'].astype('int')
+        date_time_data['month'] = date_time_data['month'].astype('int')
+        date_time_data['timestamp'] = date_time_data['timestamp'].astype('string')
+        date_time_data['date_uuid'] = date_time_data['date_uuid'].astype('string')
+
+        return date_time_data
