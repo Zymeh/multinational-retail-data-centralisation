@@ -75,7 +75,7 @@ class DataCleaning:
         store_data = store_data.drop(store_data[condition].index)
         store_data['country_code'] = store_data['country_code'].astype('string')
 
-        store_data['longitude'] = store_data['longitude'].astype('float32', errors='ignore')
+        store_data['longitude'] = store_data['longitude'].astype('string')
 
         store_data = store_data.drop('lat', axis=1)
 
@@ -83,11 +83,11 @@ class DataCleaning:
 
         store_data['store_code'] = store_data['store_code'].astype('string')
 
-        store_data['staff_numbers'] = store_data['staff_numbers'].astype('int32', errors='ignore')
+        store_data['staff_numbers'] = store_data['staff_numbers'].astype('string')
 
         store_data['opening_date'] = pd.to_datetime(store_data['opening_date'], format='mixed', errors='ignore')
 
-        store_data['latitude'] = store_data['latitude'].astype('float32', errors='ignore')
+        store_data['latitude'] = store_data['latitude'].astype('string')
 
         store_data['continent'] = store_data['continent'].str.replace('ee', '')
         store_data['continent'] = store_data['continent'].astype('string')
