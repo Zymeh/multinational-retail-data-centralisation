@@ -83,6 +83,7 @@ class DataCleaning:
 
         store_data['store_code'] = store_data['store_code'].astype('string')
 
+        store_data['staff_numbers'] = store_data['staff_numbers'].str.replace(r'\D', '', regex=True)
         store_data['staff_numbers'] = store_data['staff_numbers'].astype('string')
 
         store_data['opening_date'] = pd.to_datetime(store_data['opening_date'], format='mixed', errors='ignore')
