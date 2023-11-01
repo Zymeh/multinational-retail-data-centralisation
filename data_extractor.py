@@ -71,11 +71,27 @@ class DataExtractor:
 
         return store_data
 
-    def extract_from_s3(self):
+    def extract_from_s3(self, link):
+
+        class ValidationError(Exception):
+            pass
+
+        try:
+            if not validators.url(link):
+                raise ValidationError
+        except ValidationError:
+            print(f'The URL ({link}) you have provided is invalid, please try again.')
+
+        link_parts = link.split('/')
 
         s3 = boto3.client('s3')
-        s3.download_file('data-handling-public', 'products.csv', 'product_details.csv')
+        s3.download_file('data-handling-public', link_parts[-1], link_parts[-1])
 
-        product_details = pd.read_csv('product_details.csv')
+        if '.csv' in link_parts[-1]:
+            product_details = pd.read_csv(link_parts[-1])
+
+        elif '.json' in link_parts[-1]:
+            product_details = pd.read_json(link_parts[-1])
+
 
         return product_details
