@@ -77,13 +77,6 @@ class DataExtractor:
         class ValidationError(Exception):
             pass
 
-        try:
-            if not validators.url(link):
-                raise ValidationError
-        except ValidationError:
-            print(f'The URL ({link}) you have provided is invalid, please try again.')
-            return
-
         link_parts = link.split('/')
 
         s3 = boto3.client('s3')

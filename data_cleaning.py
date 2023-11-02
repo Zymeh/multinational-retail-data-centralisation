@@ -129,13 +129,15 @@ class DataCleaning:
 
     def clean_products_data(self):
 
-        product_data = self.de.extract_from_s3()
+        product_data = self.de.extract_from_s3('s3://data-handling-public/products.csv')
 
         product_data = product_data.drop('Unnamed: 0', axis=1 )
 
         product_data = self.convert_product_weights(product_data)
 
         product_data['date_added'] = pd.to_datetime(product_data['date_added'], format='mixed')
+
+        product_data['removed'] = product_data['removed'].replace('Still_avaliable', 'Still_available')
 
         product_data['product_price'] = product_data['product_price'].str.replace('£', '').astype('string')
         product_data['product_name'] = product_data['product_name'].astype('string')
