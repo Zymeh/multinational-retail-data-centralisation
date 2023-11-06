@@ -28,6 +28,14 @@ class DatabaseConnector:
 
         Here, we first check if the filepath is correct. If it is, the file is read and loaded. If not, an error is thrown accordingly.
         
+            Raises:
+                NotYAMLFileError: If the file is not in YAML format.
+                FileNotFoundError: If the specified file cannot be found.
+                TypeError: If the `file` argument is not a string.
+                ValueError: If there is an issue with loading the YAML file.
+                yaml.YAMLError: If there is a YAML syntax error in the file.
+                AttributeError: If there is an issue with the data type.
+
         Returns:
             cred_dict (`dict`): This is a dictionary which contains the credentials to be used to connect to the RDS database.
 
@@ -41,18 +49,8 @@ class DatabaseConnector:
                 cred_dict = yaml.load(file, Loader=yaml.FullLoader)
             return cred_dict
 
-        except FileNotFoundError as e:
-            print(f'FileNotFoundError: {e}, please make sure you are using the correct file path.')
-        except TypeError as e:
-            print(f'TypeError: {e}, please make sure you are using a string for the file name.')
-        except self.NotYAMLFileError as e:
-            print(f'Error: please make sure you are using a YAML file')
-        except ValueError as e:
-            print(f'ValueError: {e}, please make sure you are trying to load a file')
-        except yaml.YAMLError as e:
-            print(f'YAMLError: {e}, please make sure your YAML file is in the correct syntax and/or has the correct structure')
-        except AttributeError:
-            print(f'AttributeError: please use the correct data type')
+        except (FileNotFoundError, TypeError, self.NotYAMLFileError, ValueError, yaml.YAMLError, AttributeError) as e:
+            print(f'Error: {e}, please check your file path, format, and content.')
 
     def init_db_engine(self): #creating engine to be used when getting database from RDS
         ''' This method is used to connect to the RDS database.
