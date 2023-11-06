@@ -1,6 +1,7 @@
-import data_extractor
 import pandas as pd
 import re
+import data_extractor
+
 class DataCleaning:
     ''' This class is used to clean the data we have extracted from various sources.
 

@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine
 import yaml
+from sqlalchemy import create_engine
 
 class DatabaseConnector:
     ''' This class is used to connect and upload to the various databases we are using.
