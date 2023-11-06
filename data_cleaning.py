@@ -2,7 +2,7 @@ import data_extractor
 import pandas as pd
 import re
 class DataCleaning:
-    ''' This class used to clean the data we have extracted from various sources.
+    ''' This class is used to clean the data we have extracted from various sources.
 
         Methods:
             clean_user_data (): This method is used to clean the user data.
