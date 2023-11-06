@@ -25,7 +25,7 @@ class DataCleaning:
     def clean_user_data(self):
         '''This is a method to clean the user data.
 
-        Here, we are using the `read_rds_table` method from the `data_extractor` module to extract the table `legacy` users from the RDS database. We then drop all the rows where there are `'NULL'` values. For this, I simply dropped the rows where `'NULL'` was in the `first_name` as these rows contained `'NULL'` values in all columns. Next, in the address column, we replaced the `\n` with `, ` just to make it easier to read. After this, in the `country_code` column, we then replaced `'GGB'` with `'GB'` as this was an input error. In the `phone_number` column, we got rid of the `.` and `-` as these do not really matter. Then, we made a list called `strange_entries`. We obtained these by looking up unique values in the `country` column as there are only 3 countries. These are rows that contain corrupted data. We then dropped the rows which contained these values in the `country` column. Finally, we formatted the `birth_date` and `join_date` columns to display the dates correctly.  
+        Here, we are using the `read_rds_table` method from the `data_extractor` module to extract the table `legacy` users from the RDS database. We then set up a condition to drop all the rows where there are `'NULL'` values. For this, I simply dropped the rows where `'NULL'` was in the `first_name` as these rows contained `'NULL'` values in all columns. Then, we made a list called `strange_entries`. We obtained these by looking up unique values in the `country` column as there are only 3 countries. These are rows that contain corrupted data. We then dropped the rows which contained these values and the `'NULL'` values. Next, in the address column, we replaced the `\n` with `, ` just to make it easier to read. After this, in the `country_code` column, we then replaced `'GGB'` with `'GB'` as this was an input error. In the `phone_number` column, we got rid of the `.` and `-` as these do not really matter.  Finally, we formatted the `birth_date` and `join_date` columns to display the dates correctly.  
 
         Returns:
             user_data (`dataframe`): This is the cleaned dataframe.
@@ -36,19 +36,18 @@ class DataCleaning:
 
         user_data = user_data.set_index('index')
 
-        condition = user_data['first_name'] == "NULL" #dropping nulls
-        user_data = user_data.drop(user_data[condition].index)
+        strange_entries = ['I7G4DMDZOZ', 'AJ1ENKS3QL', 'XGI7FM0VBJ', 'S0E37H52ON', 'XN9NGL5C0B', '50KUU3PQUF', 'EWE3U0DZIV', 'GMRBOMI0O1', 'YOTSVPRBQ7', '5EFAFD0JLI', 'PNRMPSYR1J', 'RQRB7RMTAD', '3518UD5CE8', '7ZNO5EBALT', 'T4WBZSW0XI']
+        condition_1 = user_data['country'].isin(strange_entries)
+        condition_2 = user_data['first_name'] == "NULL"
+        user_data = user_data.drop(user_data[condition_1 | condition_2].index) 
 
-        user_data['address'] = user_data['address'].str.replace('\n', ', ') #formatting addresses
+        user_data['address'] = user_data['address'].str.replace('\n', ', ')
 
-        user_data['country_code'] = user_data['country_code'].str.replace('GGB', 'GB')#removing input errors
+        user_data['country_code'] = user_data['country_code'].str.replace('GGB', 'GB')
 
-        user_data['phone_number'] = user_data['phone_number'].str.replace('-', ' ') #correctly formatting phone numbers
+        user_data['phone_number'] = user_data['phone_number'].str.replace('-', ' ') 
         user_data['phone_number'] = user_data['phone_number'].str.replace('.', ' ')
 
-        strange_entries = ['I7G4DMDZOZ', 'AJ1ENKS3QL', 'XGI7FM0VBJ', 'S0E37H52ON', 'XN9NGL5C0B', '50KUU3PQUF', 'EWE3U0DZIV', 'GMRBOMI0O1', 'YOTSVPRBQ7', '5EFAFD0JLI', 'PNRMPSYR1J', 'RQRB7RMTAD', '3518UD5CE8', '7ZNO5EBALT', 'T4WBZSW0XI'] # here we drop the wrongly filled rows
-        condition = user_data['country'].isin(strange_entries)
-        user_data = user_data.drop(user_data[condition].index) 
 
         user_data['date_of_birth'] = pd.to_datetime(user_data['date_of_birth'], format='mixed')
         user_data['join_date'] = pd.to_datetime(user_data['join_date'], format='mixed')
@@ -58,7 +57,7 @@ class DataCleaning:
     def clean_card_data(self):
         '''This method is used to clean the card data.
 
-        Here, we are using the method `retrieve_pdf_data` from the `data_extractor` module, where the argument is a link to the pdf we are extracting data from. Next, we make a list called `strange_entries`, where we store all the corrupted data from the `card_provider` column We get this list again by using the fact there is only a small amount of entries in this column. We then use this to drop all the rows with the corrupted data as they are consistent across all columns. We then find the `'NULL'` values in the `card_number` column and then dropped the corresponding rows, again as they are consistent across all rows. After this, we remove all `?` from all the rows which include them in the `card_number` column. Next, we format the dates in the`expiry_date` and `date_payment_confirmed` columns.
+        Here, we are using the method `retrieve_pdf_data` from the `data_extractor` module, where the argument is a link to the pdf we are extracting data from. Next, we make a list called `strange_entries`, where we store all the corrupted data from the `card_provider` column We get this list again by using the fact there is only a small amount of entries in this column. We then find the `'NULL'` values in the `card_number` column. We then use both of these to drop all the rows with the corrupted data as they are consistent across all columns. After this, we remove all `?` from all the rows which include them in the `card_number` column. Next, we format the dates in the`expiry_date` and `date_payment_confirmed` columns.
 
         Returns:
             store_data (`dataframe`): This is the cleaned dataframe.
@@ -70,11 +69,9 @@ class DataCleaning:
         card_data.reset_index(drop=True)
 
         strange_entries = ['NB71VBAHJE','WJVMUO4QX6', 'JRPRLPIBZ2', 'TS8A81WFXV', 'JCQMU8FN85', '5CJH7ABGDR', 'DE488ORDXY', 'OGJTXI6X1H', '1M38DYQTZV', 'DLWF2HANZF', 'XGZBYBYGUW', 'UA07L7EILH', 'BU9U947ZGV', '5MFWFBZRM9']
-        condition = card_data['card_provider'].isin(strange_entries)
-        card_data = card_data.drop(card_data[condition].index)
-
-        condition = card_data['card_number'] == 'NULL'
-        card_data = card_data.drop(card_data[condition].index)
+        condition_1 = card_data['card_provider'].isin(strange_entries)
+        condition_2 = card_data['card_number'] == 'NULL'
+        card_data = card_data.drop(card_data[condition_1 | condition_2].index)
 
         card_data['card_number'] = card_data['card_number'].astype('string')
         card_data['card_number'] = card_data['card_number'].str.replace('?', '')
@@ -90,7 +87,7 @@ class DataCleaning:
     def clean_store_data(self):
         ''' This method is used to clean store data.
 
-        Firstly, we used the method `retrieve_stores_data` from the module `data_extractor` to obtain the data to be cleaned. Next, we then find the `'NULL'` values in the `opening_date` column and then dropped the corresponding rows, again as they are consistent across all rows. Now, in the address column, we replaced the `\n` with `, ` just to make it easier to read. Then, we make a list called `strange_entries`, where we store all the corrupted data from the `country_code` column We get this list by using the fact there is only a small amount of entries in this column. We then use this to drop all the rows with the corrupted data as they are consistent across all columns. We then dropped the `lat` column as all the data here was `'NULL'`. After this, in the `staff_numbers` column, we removed all the alphabetical charecters from the numbers where neccessary. Next, we formatted the dates in the `opening_date` column correctly, Finally, we replaced all `N/A` entries with `NaN`, just so it is easier to work with.
+        Firstly, we used the method `retrieve_stores_data` from the module `data_extractor` to obtain the data to be cleaned. Next, we then find the `'NULL'` values in the `opening_date` column. Then, we make a list called `strange_entries`, where we store all the corrupted data from the `country_code` column We get this list by using the fact there is only a small amount of entries in this column. We then use both of these to drop all the rows with the corrupted data as they are consistent across all columns. Now, in the address column, we replaced the `\n` with `, ` just to make it easier to read. We then dropped the `lat` column as all the data here was `'NULL'`. After this, in the `staff_numbers` column, we removed all the alphabetical charecters from the numbers where neccessary. Next, we formatted the dates in the `opening_date` column correctly, Finally, we replaced all `N/A` entries with `NaN`, just so it is easier to work with.
 
         Returns:
             store_data (`dataframe`): This is the cleaned dataframe.
@@ -99,21 +96,18 @@ class DataCleaning:
 
         store_data = self.de.retrieve_stores_data()
 
-        condition = store_data['opening_date'] == 'NULL'
-        store_data = store_data.drop(store_data[condition].index)
-
-        store_data['address'] = store_data['address'].str.replace('\n', ', ')
-
         strange_entries = ['YELVM536YT','FP8DLXQVGH','HMHIFNLOBN','F3AO8V2LHU','OH20I92LX3','OYVW925ZL8','B3EH2ZGQAV']
-        condition = store_data['country_code'].isin(strange_entries)
-        store_data = store_data.drop(store_data[condition].index)
+        condition_1 = store_data['country_code'].isin(strange_entries)
+        condition_2 = store_data['opening_date'] == 'NULL'
+        store_data = store_data.drop(store_data[condition_1 | condition_2].index)
 
         store_data = store_data.drop('lat', axis=1)
+
+        store_data['address'] = store_data['address'].str.replace('\n', ', ')
 
         store_data['staff_numbers'] = store_data['staff_numbers'].str.replace(r'\D', '', regex=True)
 
         store_data['opening_date'] = pd.to_datetime(store_data['opening_date'], format='mixed', errors='ignore')
-
 
         store_data['continent'] = store_data['continent'].str.replace('ee', '')
 
@@ -126,7 +120,7 @@ class DataCleaning:
     def convert_product_weights(self, product_data):
         ''' This method converts the products weights into kilograms.
 
-        First, we removed all the rows with `'NULL'` values in. To find these rows, we simply found the `'NULL'` values in the `weight` column and dropped these rows as they contain `'NULL'` values in every column. Then, we make a list called `strange_entries`, where we store all the corrupted data from the `category` column We get this list by using the fact there is only a small amount of entries in this column. We then use this to drop all the rows with the corrupted data as they are consistent across all columns. Finally, we iterate through all the data in the `weight` column and convert them into the correct units, that being kilograms.
+        Firstly, we make a list called `strange_entries`, where we store all the corrupted data from the `category` column. We get this list by using the fact there is only a small amount of entries in this column. Then, we removed all the rows with `'NULL'` values in. To find these rows, we simply found the `'NULL'` values in the `weight` column and dropped these rows as they contain `'NULL'` values in every column. We then use this to drop all the rows with the corrupted data as they are consistent across all columns. Finally, we iterate through all the data in the `weight` column and convert them into the correct units, that being kilograms.
 
         Args: 
             product_data (`dataframe`): the dataframe we want to convert weights for.
@@ -136,12 +130,10 @@ class DataCleaning:
         
         '''
 
-        condition = pd.isna(product_data['weight'])
-        product_data = product_data.drop(product_data[condition].index)
-
         strange_entries = ['S1YB74MLMJ', 'C3NCA2CL35', 'WVPMHZP59U']
-        condition = product_data['category'].isin(strange_entries)
-        product_data = product_data.drop(product_data[condition].index)
+        condition_1 = product_data['category'].isin(strange_entries)
+        condition_2 = pd.isna(product_data['weight'])
+        product_data = product_data.drop(product_data[condition_1 | condition_2].index)
 
         for _ in product_data['weight']:
 
@@ -178,11 +170,11 @@ class DataCleaning:
 
         product_data = self.convert_product_weights(product_data)
 
-        product_data['date_added'] = pd.to_datetime(product_data['date_added'], format='mixed')
-
         product_data['removed'] = product_data['removed'].replace('Still_avaliable', 'Still_available')
 
         product_data['product_price'] = product_data['product_price'].str.replace('£', '').astype('string')
+
+        product_data['date_added'] = pd.to_datetime(product_data['date_added'], format='mixed')
 
         return product_data
 
@@ -208,7 +200,7 @@ class DataCleaning:
     def clean_date_time_data(self):
         ''' This method is used to clean the data time data.
 
-        Firstly, we supplied a url to the method `extract_from_s3` from the `data_extractor` module to obtain the data we need to clean. Next, we then find the `'NULL'` values in the `month` column and then dropped the corresponding rows, again as they are consistent across all rows. Then, we make a list called `strange_entries`, where we store all the corrupted data from the `month` column We get this list by using the fact there is only a small amount of entries in this column.
+        Firstly, we supplied a url to the method `extract_from_s3` from the `data_extractor` module to obtain the data we need to clean. Then, we make a list called `strange_entries`, where we store all the corrupted data from the `month` column. We get this list by using the fact there is only a small amount of entries in this column. Next, we then find the `'NULL'` values in the `month` column and then dropped the corresponding rows, again as they are consistent across all rows. We then use both of these conditions to drop the rows with the corrupted data.
 
         Returns:
             date_time_data (`dataframe`): This is the cleaned dataframe.
@@ -220,11 +212,8 @@ class DataCleaning:
         date_time_data = self.de.extract_from_s3(url)
         
         strange_entries = ['1YMRDJNU2T', '9GN4VIO5A8', 'NF46JOZMTA', 'LZLLPZ0ZUA', 'YULO5U0ZAM', 'SAT4V9O2DL', '3ZZ5UCZR5D', 'DGQAH7M1HQ', '4FHLELF101', '22JSMNGJCU', 'EB8VJHYZLE', '2VZEREEIKB', 'K9ZN06ZS1X', '9P3C0WBWTU', 'W6FT760O2B', 'DOIR43VTCM', 'FA8KD82QH3', '03T414PVFI', 'FNPZFYI489', '67RMH5U2R6', 'J9VQLERJQO', 'ZRH2YT3FR8', 'GYSATSCN88']
-
-        condition = date_time_data['month'].isin(strange_entries)
-        date_time_data = date_time_data.drop(date_time_data[condition].index)
-
-        condition = date_time_data['month'] == 'NULL'
-        date_time_data = date_time_data.drop(date_time_data[condition].index)
+        condition_1 = date_time_data['month'].isin(strange_entries)
+        condition_2 = date_time_data['month'] == 'NULL'
+        date_time_data = date_time_data.drop(date_time_data[condition_1 | condition_2].index)
 
         return date_time_data
