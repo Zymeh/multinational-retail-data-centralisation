@@ -7,6 +7,7 @@
     - [Programming Language](#programming-language)
     - [Python Modules and Libraries](#python-modules-and-libraries)
     - [Database Documentation](#database-documentation)
+1. [Getting Started](#getting-started)
 1. [Modules for Extraction, Cleaning and Uploading](#modules-for-extraction-cleaning-and-uploading)
     - [database_utils.py](#database_utilspy)
         - [DatabaseConnector Methods](#databaseconnector-methods)
