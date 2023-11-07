@@ -48,9 +48,10 @@ class DataExtractor:
         
         '''
 
-        inspector = inspect(self.engine)
+        with self.engine.begin() as connection:
+            inspector = inspect(connection)
 
-        table_names = inspector.get_table_names()
+            table_names = inspector.get_table_names()
 
         return table_names
 
@@ -67,7 +68,8 @@ class DataExtractor:
         
         '''
         
-        df = pd.read_sql_table(table, self.engine)
+        with self.engine.begin() as connection:
+            df = pd.read_sql_table(table, connection)
 
         return df
     
