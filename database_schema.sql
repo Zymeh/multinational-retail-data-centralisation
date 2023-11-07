@@ -61,8 +61,6 @@ FROM
 
 --task 4
 
-ALTER TABLE dim_products
-DROP COLUMN weight_class;
 
 ALTER TABLE dim_products
 ADD COLUMN weight_class TEXT;
