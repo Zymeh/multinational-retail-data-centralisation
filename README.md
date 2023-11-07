@@ -21,7 +21,7 @@
 
 ## Introduction
 
-This is my third project with The AiCore, and I adored every part of it. Throughout this experience, I have honed my expertise in various areas, including `pandas`, data cleaning, AWS, APIs, SQL, and `SQLAlchemy`. Additionally, the project expanded my knowledge by introducing me to the Python module called `tabula`.
+This is my third project with AiCore, and I adored every part of it. Throughout this experience, I have honed my expertise in various areas, including `pandas`, data cleaning, AWS, APIs, SQL, and `SQLAlchemy`. Additionally, the project expanded my knowledge by introducing me to the Python module called `tabula`.
 
 Driven by a desire to exceed expectations, I've equipped myself with indispensable tools like dbdocs and Python modules such as `re` and `validators`. All of which have enhanced my project.
 
