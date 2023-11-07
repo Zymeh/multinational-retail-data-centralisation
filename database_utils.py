@@ -52,10 +52,12 @@ class DatabaseConnector:
         except (FileNotFoundError, TypeError, self.NotYAMLFileError, ValueError, yaml.YAMLError, AttributeError) as e:
             print(f'Error: {e}, please check your file path, format, and content.')
 
-    def init_db_engine(self): #creating engine to be used when getting database from RDS
+    def init_db_engine(self):
         ''' This method is used to connect to the RDS database.
 
-        Firstly, we use the method `read_db_creds` to get a dictionary of credentials. Then, we assign the values for each key to a variable. These variables are then used when we create the engine.
+        Firstly, we use the method `read_db_creds` to get a dictionary of credentials.
+        Then, we assign the values for each key to a variable. These variables are 
+        then used when we create the engine.
 
         Returns:
             engine_for_exraction: This is an engine which is used when extracting data.
@@ -80,10 +82,14 @@ class DatabaseConnector:
         '''This method is used to upload the cleaned dataframe to a database.
 
         Args:
-            cleaned_dataframe (`dataframe`): This is the clean dataframe we want to upload.
-            table_name (`str`): This is what we would like to call the table once uploaded to the database.
+            cleaned_dataframe (`dataframe`): This is the clean dataframe we 
+            want to upload.
+            table_name (`str`): This is what we would like to call the table 
+            once uploaded to the database.
 
-        Here, we simply connect to the database by supplying `create_engine` with the correct credentials. We then use this engine to create a connection so that we can upload the cleaned dataframes to.
+        Here, we simply connect to the database by supplying `create_engine` 
+        with the correct credentials. We then use this engine to create a 
+        connection so that we can upload the cleaned dataframes to.
         
         '''
         

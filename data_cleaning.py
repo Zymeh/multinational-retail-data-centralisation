@@ -9,7 +9,8 @@ class DataCleaning:
             clean_user_data (): This method is used to clean the user data.
             clean_card_data (): This method is used to clean card details.
             clean_store_data (): This method is used to cleam the store data.
-            convert_product_weights(`dataframe`): This method is used to convert the products weights into kilograms.
+            convert_product_weights(`dataframe`): This method is used to convert 
+            the products weights into kilograms.
             clean_products_data (): This method is used to clean the products data.
             clean_date_time_data (): This method is used to clean the date time data.
     
@@ -18,7 +19,8 @@ class DataCleaning:
     def __init__(self):
         ''' This initialises the instance of the class.
 
-        Inside, we are calling the `DataExtractor` class from the `data_extractor` module and assigning it `self` for later use in the class.
+        Inside, we are calling the `DataExtractor` class from the `data_extractor` 
+        module and assigning it `self` for later use in the class.
         
         '''
         self.de = data_extractor.DataExtractor()
@@ -26,7 +28,19 @@ class DataCleaning:
     def clean_user_data(self):
         '''This is a method to clean the user data.
 
-        Here, we are using the `read_rds_table` method from the `data_extractor` module to extract the table `legacy` users from the RDS database. We then set up a condition to drop all the rows where there are `'NULL'` values. For this, I simply dropped the rows where `'NULL'` was in the `first_name` as these rows contained `'NULL'` values in all columns. Then, we made a list called `strange_entries`. We obtained these by looking up unique values in the `country` column as there are only 3 countries. These are rows that contain corrupted data. We then dropped the rows which contained these values and the `'NULL'` values. Next, in the address column, we replaced the `\n` with `, ` just to make it easier to read. After this, in the `country_code` column, we then replaced `'GGB'` with `'GB'` as this was an input error. In the `phone_number` column, we got rid of the `.` and `-` as these do not really matter.  Finally, we formatted the `birth_date` and `join_date` columns to display the dates correctly.  
+        Here, we are using the `read_rds_table` method from the `data_extractor` 
+        module to extract the table `legacy` users from the RDS database. We then 
+        set up a condition to drop all the rows where there are `'NULL'` values. 
+        For this, I simply dropped the rows where `'NULL'` was in the `first_name` 
+        as these rows contained `'NULL'` values in all columns. Then, we made a list 
+        called `strange_entries`. We obtained these by looking up unique values in 
+        the `country` column as there are only 3 countries. These are rows that contain 
+        corrupted data. We then dropped the rows which contained these values and the 
+        `'NULL'` values. Next, in the address column, we replaced the `\n` with `, ` 
+        just to make it easier to read. After this, in the `country_code` column, we 
+        then replaced `'GGB'` with `'GB'` as this was an input error. In the `phone_number` 
+        column, we got rid of the `.` and `-` as these do not really matter.  Finally, we 
+        formatted the `birth_date` and `join_date` columns to display the dates correctly.  
 
         Returns:
             user_data (`dataframe`): This is the cleaned dataframe.
@@ -58,7 +72,15 @@ class DataCleaning:
     def clean_card_data(self):
         '''This method is used to clean the card data.
 
-        Here, we are using the method `retrieve_pdf_data` from the `data_extractor` module, where the argument is a link to the pdf we are extracting data from. Next, we make a list called `strange_entries`, where we store all the corrupted data from the `card_provider` column We get this list again by using the fact there is only a small amount of entries in this column. We then find the `'NULL'` values in the `card_number` column. We then use both of these to drop all the rows with the corrupted data as they are consistent across all columns. After this, we remove all `?` from all the rows which include them in the `card_number` column. Next, we format the dates in the`expiry_date` and `date_payment_confirmed` columns.
+        Here, we are using the method `retrieve_pdf_data` from the `data_extractor` 
+        module, where the argument is a link to the pdf we are extracting data from. 
+        Next, we make a list called `strange_entries`, where we store all the corrupted 
+        data from the `card_provider` column We get this list again by using the fact there 
+        is only a small amount of entries in this column. We then find the `'NULL'` 
+        values in the `card_number` column. We then use both of these to drop all the 
+        rows with the corrupted data as they are consistent across all columns. After 
+        this, we remove all `?` from all the rows which include them in the `card_number` 
+        column. Next, we format the dates in the`expiry_date` and `date_payment_confirmed` columns.
 
         Returns:
             store_data (`dataframe`): This is the cleaned dataframe.
@@ -88,7 +110,18 @@ class DataCleaning:
     def clean_store_data(self):
         ''' This method is used to clean store data.
 
-        Firstly, we used the method `retrieve_stores_data` from the module `data_extractor` to obtain the data to be cleaned. Next, we then find the `'NULL'` values in the `opening_date` column. Then, we make a list called `strange_entries`, where we store all the corrupted data from the `country_code` column We get this list by using the fact there is only a small amount of entries in this column. We then use both of these to drop all the rows with the corrupted data as they are consistent across all columns. Now, in the address column, we replaced the `\n` with `, ` just to make it easier to read. We then dropped the `lat` column as all the data here was `'NULL'`. After this, in the `staff_numbers` column, we removed all the alphabetical charecters from the numbers where neccessary. Next, we formatted the dates in the `opening_date` column correctly, Finally, we replaced all `N/A` entries with `NaN`, just so it is easier to work with.
+        Firstly, we used the method `retrieve_stores_data` from the module `data_extractor` 
+        to obtain the data to be cleaned. Next, we then find the `'NULL'` values in the 
+        `opening_date` column. Then, we make a list called `strange_entries`, where we 
+        store all the corrupted data from the `country_code` column We get this list by 
+        using the fact there is only a small amount of entries in this column. We then use 
+        both of these to drop all the rows with the corrupted data as they are consistent 
+        across all columns. Now, in the address column, we replaced the `\n` with `, ` just 
+        to make it easier to read. We then dropped the `lat` column as all the data here 
+        was `'NULL'`. After this, in the `staff_numbers` column, we removed all the alphabetical 
+        charecters from the numbers where neccessary. Next, we formatted the dates in the 
+        `opening_date` column correctly, Finally, we replaced all `N/A` entries with `NaN`, 
+        just so it is easier to work with.
 
         Returns:
             store_data (`dataframe`): This is the cleaned dataframe.
@@ -121,13 +154,21 @@ class DataCleaning:
     def convert_product_weights(self, product_data):
         ''' This method converts the products weights into kilograms.
 
-        Firstly, we make a list called `strange_entries`, where we store all the corrupted data from the `category` column. We get this list by using the fact there is only a small amount of entries in this column. Then, we removed all the rows with `'NULL'` values in. To find these rows, we simply found the `'NULL'` values in the `weight` column and dropped these rows as they contain `'NULL'` values in every column. We then use this to drop all the rows with the corrupted data as they are consistent across all columns. Finally, we iterate through all the data in the `weight` column and convert them into the correct units, that being kilograms.
+        Firstly, we make a list called `strange_entries`, where we store all the corrupted 
+        data from the `category` column. We get this list by using the fact there is only a 
+        small amount of entries in this column. Then, we removed all the rows with `'NULL'` 
+        values in. To find these rows, we simply found the `'NULL'` values in the `weight` 
+        column and dropped these rows as they contain `'NULL'` values in every column. 
+        We then use this to drop all the rows with the corrupted data as they are consistent
+        across all columns. Finally, we iterate through all the data in the `weight` 
+        column and convert them into the correct units, that being kilograms.
 
         Args: 
             product_data (`dataframe`): the dataframe we want to convert weights for.
 
         Returns:
-            product_data (`dataframe`): This is a dataframe where the product weights are adjusted. Some cleaning has been done too.
+            product_data (`dataframe`): This is a dataframe where the product weights 
+            are adjusted. Some cleaning has been done too.
         
         '''
 
@@ -158,7 +199,13 @@ class DataCleaning:
     def clean_products_data(self):
         ''' This method cleans the product data. 
 
-        Firstly, we are using the method `extract_from_s3` from the `data_extractor` module to get the data we need to clean. Now, we then drop the column `Unnamed: 0` as we don't need it. We then pass the dataframe we have extracted to the `convert_product_weights` method as we want to convert the weights into kilograms. Next, we converted all the data in the `date_added` column to datetime. After this, we corrected a typographical error in the `removed` column. Then, in the `product_price` column, we dropped the `£` from all values.
+        Firstly, we are using the method `extract_from_s3` from the `data_extractor` 
+        module to get the data we need to clean. Now, we then drop the column `Unnamed: 0` 
+        as we don't need it. We then pass the dataframe we have extracted to the 
+        `convert_product_weights` method as we want to convert the weights into kilograms. 
+        Next, we converted all the data in the `date_added` column to datetime. After this, 
+        we corrected a typographical error in the `removed` column. Then, in the `product_price` 
+        column, we dropped the `£` from all values.
 
         Returns:
             product_data (`dataframe`): This is the cleaned dataframe.
@@ -182,7 +229,9 @@ class DataCleaning:
     def clean_orders_data(self):
         ''' This method is used to clean the orders data.
 
-        Firstly, we extract the `orders_table` using the `read_rds_table` method from the moudule `data_extractor`. After this, we simply drop the columns `level_0`, `first_name`, `last_name` and `1` as these are not needed. 
+        Firstly, we extract the `orders_table` using the `read_rds_table` method from 
+        the moudule `data_extractor`. After this, we simply drop the columns `level_0`, 
+        `first_name`, `last_name` and `1` as these are not needed. 
 
         Returns:
             orders_data (`dataframe`): This is the cleaned dataframe.
@@ -201,7 +250,13 @@ class DataCleaning:
     def clean_date_time_data(self):
         ''' This method is used to clean the data time data.
 
-        Firstly, we supplied a url to the method `extract_from_s3` from the `data_extractor` module to obtain the data we need to clean. Then, we make a list called `strange_entries`, where we store all the corrupted data from the `month` column. We get this list by using the fact there is only a small amount of entries in this column. Next, we then find the `'NULL'` values in the `month` column and then dropped the corresponding rows, again as they are consistent across all rows. We then use both of these conditions to drop the rows with the corrupted data.
+        Firstly, we supplied a url to the method `extract_from_s3` from the `data_extractor` 
+        module to obtain the data we need to clean. Then, we make a list called `strange_entries`, 
+        where we store all the corrupted data from the `month` column. We get this list by using 
+        the fact there is only a small amount of entries in this column. Next, we then find the 
+        `'NULL'` values in the `month` column and then dropped the corresponding rows, again as 
+        they are consistent across all rows. We then use both of these conditions to drop the rows 
+        with the corrupted data.
 
         Returns:
             date_time_data (`dataframe`): This is the cleaned dataframe.
