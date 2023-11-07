@@ -63,6 +63,39 @@ __`re`__: Python's regular expression library for pattern matching and data extr
 
 __`dbdocs`__: Used for generating and documenting the database schema and structure.
 
+## Getting Started
+
+First of all, please download `database_utils.py`, `data_extractor.py`, `data_cleaning.py` and `database_schema`.
+
+It is important that you have the following python packages installed in your current environment: `yaml`, `SQLAlchemy`, `requests`, `validators`, `pandas`, `tabula`, `boto3` and `re`.
+
+Also, please make sure you have a credentials file, which should be a YAML file.
+
+Now, go into the `database_utils.py` file and change the credentials in the method `upload_to_db` to the database you wish to upload the files into. Here is what I am talking about:
+
+![Alt text](image.png)
+
+In a seperate file, please use the following to upload the tables to the database, like this: 
+
+```
+import data_cleaning 
+import database_utils
+
+
+dc = data_cleaning.DataCleaning()
+du = database_utils.DatabaseConnector(<credentials YAML file>)
+
+df = dc.<cleaning function here>()
+
+du.upload_to_db(df, <table name>)
+```
+
+Where you replace `<credentials YAML file>`, `<cleaning function here>`, and `<table name>`. 
+
+When you have used the correct methods to clean the data and uploaded it to your database, you may run the `database_schema.sql` file to apply the correct schema to the database. 
+
+You will now be able to successfully query the data in your database.
+
 ## Modules for Extraction, Cleaning and Uploading
 
 I created three modules which streamlines the process for extracting data from various sources, cleaning the data and uploading the data to a local database. 
