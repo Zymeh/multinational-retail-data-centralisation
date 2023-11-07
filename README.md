@@ -89,7 +89,6 @@ In a seperate file, please use the following to upload the tables to the databas
 import data_cleaning 
 import database_utils
 
-
 dc = data_cleaning.DataCleaning()
 du = database_utils.DatabaseConnector(<credentials YAML file>)
 
