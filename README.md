@@ -71,7 +71,7 @@ It is important that you have the following python packages installed in your cu
 
 Also, please make sure you have a credentials file, which should be a YAML file.
 
-Now, go into the `database_utils.py` file and change the credentials in the method `upload_to_db` to the database you wish to upload the files into. Here is what I am talking about:
+Now, go into the `database_utils.py` file and change the credentials in the method `upload_to_db` to the database you wish to upload the files into (you will need to create a database on postgres beforehand, as this is what you will be connected to). Here is what I am talking about:
 
 ```
 DATABASE_TYPE = 'postgresql'
