@@ -73,7 +73,15 @@ Also, please make sure you have a credentials file, which should be a YAML file.
 
 Now, go into the `database_utils.py` file and change the credentials in the method `upload_to_db` to the database you wish to upload the files into. Here is what I am talking about:
 
-![Alt text](image.png)
+```
+DATABASE_TYPE = 'postgresql'
+DBAPI = 'psycopg2'
+HOST = 'localhost'
+USER = 'postgres'
+PASSWORD = '<password>'
+DATABASE = 'sales_data'
+PORT = 5432
+```
 
 In a seperate file, please use the following to upload the tables to the database, like this: 
 
