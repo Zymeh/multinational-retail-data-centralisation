@@ -62,7 +62,7 @@ __`re`__: Python's regular expression library for pattern matching and data extr
 
 ### Database Documentation
 
-__`dbdocs`__: Used for generating and documenting the database schema and structure.
+__dbdocs__: Used for generating and documenting the database schema and structure.
 
 ## Getting Started
 
