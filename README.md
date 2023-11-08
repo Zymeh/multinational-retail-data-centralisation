@@ -190,4 +190,4 @@ This is a SQL file that contains the queries we were asked to perform.
 
 ## Database Diagram
 
-I created a database diagram, which is located at `sales_data.png`. We can use this to easily see the relations with our database. It shows the primary keys as well as how the are related to the main table, `orders_table`. This makes it easier to navigate the tables when querying the data.
+I created a database diagram, which is located at `sales_data.png`. We can use this to easily see the relations within our database. It shows the primary keys as well as how the are related to the main table, `orders_table`. This makes it easier to navigate the tables when querying the data.
