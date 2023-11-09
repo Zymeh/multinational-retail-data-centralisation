@@ -14,7 +14,8 @@ SELECT pg_typeof(date_uuid) AS date_uuid,
        pg_typeof(product_code) AS product_code, 
        pg_typeof(product_quantity) AS product_quantity
 FROM
-    orders_table;
+    orders_table
+LIMIT 1;
 
 -- task 2
 
@@ -33,7 +34,8 @@ SELECT pg_typeof(first_name) AS first_name,
        pg_typeof(user_uuid) AS user_uuid,
        pg_typeof(join_date) AS join_date
 FROM
-    dim_users;
+    dim_users
+LIMIT 1;
 
 -- task 3
 ALTER TABLE dim_store_details
@@ -57,7 +59,8 @@ SELECT pg_typeof(longitude) AS longitude,
        pg_typeof(country_code) AS country_code,
        pg_typeof(continent) AS continent
 FROM 
-    dim_store_details;
+    dim_store_details
+LIMIT 1;
 
 --task 4
 
@@ -104,6 +107,7 @@ SELECT pg_typeof(product_price) AS product_price,
        pg_typeof(weight_class) AS weight_class
 FROM
     dim_products
+LIMIT 1;
 
 -- task 6
 
@@ -120,7 +124,8 @@ SELECT pg_typeof(month) as month,
        pg_typeof(time_period) as time_period,
        pg_typeof(date_uuid) as date_uuid
 FROM
-    dim_date_times;
+    dim_date_times
+LIMIT 1;
 
 -- task 7
 
@@ -133,7 +138,8 @@ SELECT pg_typeof(card_number) AS card_number,
        pg_typeof(expiry_date) AS expiry_date,
        pg_typeof(date_payment_confirmed) AS date_payment_confirmed
 FROM 
-    dim_card_details;
+    dim_card_details
+LIMIT 1;
 
 -- task 8
 
