@@ -140,7 +140,7 @@ We introduce the `DataExtractor` class, which introduces methods that serve to e
 
 ### data_cleaning.py
 
-We introduce the `DataCleaning` class, which introduces methods to clean the data we have extracted from the various sources. We initilaise the `DataExtractor` class from before since we will be using this a lot.
+We introduce the `DataCleaning` class, which contains methods to clean the data we have extracted from the various sources. We initilaise the `DataExtractor` class from before since we will be using this a lot.
 
 #### `DataCleaning` Methods
 
