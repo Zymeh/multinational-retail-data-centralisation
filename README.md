@@ -1,5 +1,7 @@
 # multinational-retail-data-centralisation
 
+## (NOTE: I understand I have not done the README correctly, I will be using the wiki to write about eveything in detail.)
+
 # Table of Contents
 1. [Introduction](#introduction)
 1. [Technologies, Modules and Libraries](#technologies-utilised-and-python-moduleslibraries)
