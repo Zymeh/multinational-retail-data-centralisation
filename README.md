@@ -1,5 +1,7 @@
 # multinational-retail-data-centralisation
 
+## (NOTE: I understand I have not done the README correctly, I will be using the wiki to write about eveything in detail.)
+
 # Table of Contents
 1. [Introduction](#introduction)
 1. [Technologies, Modules and Libraries](#technologies-utilised-and-python-moduleslibraries)
@@ -24,7 +26,7 @@
 
 This is my third project with AiCore, and I adored every part of it. Throughout this experience, I have honed my expertise in various areas, including `pandas`, data cleaning, AWS, APIs, SQL, and `SQLAlchemy`. Additionally, the project expanded my knowledge by introducing me to the Python module called `tabula`.
 
-Driven by a desire to exceed expectations, I've equipped myself with indispensable tools like dbdocs and Python modules such as `re` and `validators`. All of which have enhanced my project.
+Driven by a desire to exceed expectations, I've equipped myself with indispensable tools like dbdocs and Python modules such as `validators`. All of which have enhanced my project.
 
 In this project: I extracted data from various sources, cleaned the data using pandas, and finally uploaded the cleaned data to a local PostgreSQL database. After the database was created, I altered tables so that the data types of each column were correct. Then in the `dim_products` table, I added a new column which catagorised the weights, and I also altered a column in this table to make it easier to understand. Then, I added the primary and foreign keys. Finally, I wrote queries which had 2 uses: to reinforce my SQL knowledge, and to check if I had cleaned the data correctly.
 
@@ -140,7 +142,7 @@ We introduce the `DataExtractor` class, which introduces methods that serve to e
 
 ### data_cleaning.py
 
-We introduce the `DataCleaning` class, which introduces methods to clean the data we have extracted from the various sources. We initilaise the `DataExtractor` class from before since we will be using this a lot.
+We introduce the `DataCleaning` class, which contains methods to clean the data we have extracted from the various sources. We initilaise the `DataExtractor` class from before since we will be using this a lot.
 
 #### `DataCleaning` Methods
 
