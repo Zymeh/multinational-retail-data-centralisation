@@ -155,6 +155,9 @@ ALTER TABLE dim_store_details
 ALTER TABLE dim_users
     ADD PRIMARY KEY (user_uuid);
 
+ALTER TABLE dim_card_details
+    ADD PRIMARY KEY (card_number);
+
 -- task 9
 
 ALTER TABLE orders_table
@@ -172,3 +175,7 @@ ALTER TABLE orders_table
 ALTER TABLE orders_table
     ADD CONSTRAINT fk_product_code
     FOREIGN KEY (product_code) REFERENCES dim_products (product_code);
+
+ALTER TABLE orders_table
+    ADD CONSTRAINT fk_card_number
+    FOREIGN KEY (card_number) REFERENCES dim_card_details (card_number);
