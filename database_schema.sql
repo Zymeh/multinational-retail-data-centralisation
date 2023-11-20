@@ -38,23 +38,26 @@ FROM
 LIMIT 1;
 
 -- task 3
+-- update NULL values to 'N/A'
 UPDATE dim_store_details
-SET address = COALESCE(address,'N/A'),
-    longitude = COALESCE(longitude,'N/A'),
-    locality = COALESCE(locality,'N/A'),
-    latitude = COALESCE(latitude,'N/A')
+SET
+  address = COALESCE(address, 'N/A'),
+  longitude = COALESCE(NULLIF(CAST(longitude AS VARCHAR), 'N/A'), 'N/A'),
+  locality = COALESCE(locality, 'N/A'),
+  latitude = COALESCE(NULLIF(CAST(latitude AS VARCHAR), 'N/A'), 'N/A')
 WHERE address IS NULL OR longitude IS NULL OR locality IS NULL OR latitude IS NULL;
 
+-- alter column types
 ALTER TABLE dim_store_details
-    ALTER COLUMN longitude TYPE FLOAT USING (CASE WHEN longitude IS NOT 'N/A' THEN longitude::REAL END),
-    ALTER COLUMN locality TYPE VARCHAR(255),
-    ALTER COLUMN store_code TYPE VARCHAR(12),
-    ALTER COLUMN staff_numbers TYPE INTEGER USING (trim(staff_numbers)::INTEGER),
-    ALTER COLUMN opening_date TYPE DATE,
-    ALTER COLUMN store_type TYPE VARCHAR(255),
-    ALTER COLUMN latitude TYPE FLOAT USING (CASE WHEN latitude IS NOT 'N/A' THEN latitude::REAL END),
-    ALTER COLUMN country_code TYPE VARCHAR(2),
-    ALTER COLUMN continent TYPE VARCHAR(255);
+  ALTER COLUMN longitude TYPE FLOAT USING (CASE WHEN longitude <> 'N/A' THEN longitude::REAL END),
+  ALTER COLUMN locality TYPE VARCHAR(255),
+  ALTER COLUMN store_code TYPE VARCHAR(12),
+  ALTER COLUMN staff_numbers TYPE INTEGER USING (trim(staff_numbers)::INTEGER),
+  ALTER COLUMN opening_date TYPE DATE,
+  ALTER COLUMN store_type TYPE VARCHAR(255),
+  ALTER COLUMN latitude TYPE FLOAT USING (CASE WHEN latitude <> 'N/A' THEN latitude::REAL END),
+  ALTER COLUMN country_code TYPE VARCHAR(2),
+  ALTER COLUMN continent TYPE VARCHAR(255);
 
 SELECT pg_typeof(longitude) AS longitude,
        pg_typeof(locality) AS locality,
@@ -69,11 +72,12 @@ FROM
     dim_store_details
 LIMIT 1;
 
+
 --task 4
 
-
 ALTER TABLE dim_products
-ADD COLUMN weight_class TEXT;
+ADD COLUMN weight_class TEXT,
+ALTER COLUMN weight TYPE FLOAT USING (weight::REAL);
 
 UPDATE dim_products
 SET weight_class = 
@@ -96,7 +100,7 @@ SET still_available =
     END;
 
 ALTER TABLE dim_products
-    ALTER COLUMN product_price TYPE REAL,
+    ALTER COLUMN product_price TYPE FLOAT USING product_price::REAL,
     ALTER COLUMN "EAN" TYPE VARCHAR(17),
     ALTER COLUMN product_code TYPE VARCHAR(11),
     ALTER COLUMN date_added TYPE DATE,
