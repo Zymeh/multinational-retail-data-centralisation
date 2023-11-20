@@ -34,8 +34,8 @@ ORDER BY total_sales DESC;
 
 -- task 4
 
-SELECT SUM(orders_table.product_quantity) AS product_quantity_count, 
-       COUNT(orders_table.date_uuid) AS number_of_sales,
+SELECT COUNT(orders_table.date_uuid) AS number_of_sales,
+       SUM(orders_table.product_quantity) AS product_quantity_count, 
        CASE
            WHEN dim_store_details.store_code LIKE 'WEB%' THEN 'Online'
            ELSE 'Offline'
@@ -77,7 +77,7 @@ INNER JOIN
 INNER JOIN
     dim_products ON dim_products.product_code = orders_table.product_code
 GROUP BY year, month
-ORDER BY total_sales DESC
+ORDER BY total_sales DESC;
 
 -- task 7
 
@@ -85,11 +85,11 @@ SELECT SUM(staff_numbers) AS total_staff_numbers,
     country_code
 FROM dim_store_details
 GROUP BY country_code
-ORDER BY total_staff_numbers DESC
+ORDER BY total_staff_numbers DESC;
 
 -- task 8
 
-SELECT ROUND(CAST(SUM(orders_table.product_quantity * dim_products.product_price) AS NUMERIC), 2),
+SELECT ROUND(CAST(SUM(orders_table.product_quantity * dim_products.product_price) AS NUMERIC), 2) AS total_sales,
        store_type,
        country_code
 FROM dim_store_details
@@ -98,7 +98,8 @@ INNER JOIN
 INNER JOIN
     dim_products ON orders_table.product_code = dim_products.product_code
 WHERE country_code = 'DE'
-GROUP BY store_type, country_code;
+GROUP BY store_type, country_code
+ORDER BY total_sales ASC;
 
 -- task 9
 
