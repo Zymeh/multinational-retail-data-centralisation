@@ -38,14 +38,21 @@ FROM
 LIMIT 1;
 
 -- task 3
+UPDATE dim_store_details
+SET address = COALESCE(address,'N/A'),
+    longitude = COALESCE(longitude,'N/A'),
+    locality = COALESCE(locality,'N/A'),
+    latitude = COALESCE(latitude,'N/A')
+WHERE address IS NULL OR longitude IS NULL OR locality IS NULL OR latitude IS NULL;
+
 ALTER TABLE dim_store_details
-    ALTER COLUMN longitude TYPE FLOAT USING (CASE WHEN longitude IS NOT NULL THEN longitude::REAL END),
+    ALTER COLUMN longitude TYPE FLOAT USING (CASE WHEN longitude IS NOT 'N/A' THEN longitude::REAL END),
     ALTER COLUMN locality TYPE VARCHAR(255),
     ALTER COLUMN store_code TYPE VARCHAR(12),
     ALTER COLUMN staff_numbers TYPE INTEGER USING (trim(staff_numbers)::INTEGER),
     ALTER COLUMN opening_date TYPE DATE,
     ALTER COLUMN store_type TYPE VARCHAR(255),
-    ALTER COLUMN latitude TYPE FLOAT USING (CASE WHEN latitude IS NOT NULL THEN latitude::REAL END),
+    ALTER COLUMN latitude TYPE FLOAT USING (CASE WHEN latitude IS NOT 'N/A' THEN latitude::REAL END),
     ALTER COLUMN country_code TYPE VARCHAR(2),
     ALTER COLUMN continent TYPE VARCHAR(255);
 
