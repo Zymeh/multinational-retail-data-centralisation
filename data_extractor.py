@@ -6,6 +6,7 @@ import tabula
 import boto3
 from database_utils import DatabaseConnector
 
+
 class DataExtractor:
     ''' This class is used to extract data from various sources.
 
@@ -41,7 +42,7 @@ class DataExtractor:
         self.engine = self.rds_db_con.init_db_engine()
         self.headers_stores = {
             "Content-Type": "application/json",
-            "x-api-key": "yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX"
+            "x-api-key": "<insert_key_here>"
         }
 
     def list_db_tables(self):
