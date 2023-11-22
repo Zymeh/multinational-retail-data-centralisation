@@ -115,7 +115,7 @@ WITH cte_time_difference AS (
                year
         FROM 
         dim_date_times
-    )
+    ) AS formatted_date_time_subquery
 )
 SELECT year,
        AVG(time_diff) AS actual_time_taken
