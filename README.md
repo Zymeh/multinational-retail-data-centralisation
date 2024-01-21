@@ -1,6 +1,4 @@
-# multinational-retail-data-centralisation
-
-## (NOTE: I understand I have not done the README correctly, I will be using the wiki to write about eveything in detail.)
+# Multinational Retail Data Centralisation
 
 # Table of Contents
 1. [Introduction](#1introduction)
